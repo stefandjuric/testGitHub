@@ -1,0 +1,28 @@
+#include <iostream>
+#include <stdio.h>
+#define MAX_NIZ 100
+
+using namespace std;
+
+int main()
+
+{
+
+    int a[MAX_NIZ];
+    int n;
+    printf("Koliko elemenatea zelite unjeti: \n");
+    scanf("%d",&n);
+    for(int i=0;i<n;i++){
+       scanf("%d",&a[i]);
+    }
+
+    FILE *pf;
+    pf=fopen("test.txt", "w");
+    for(int i=0;i<n;i++){
+        fprintf(pf,"%d %d \n",a[i],a[i]*a[i]);
+    }
+    fclose(pf);
+
+
+    return 0;
+}

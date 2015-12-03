@@ -1,0 +1,37 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_NIZ 100
+
+using namespace std;
+struct Student{
+    char *ime;
+    char *prezime;
+    int ocena;
+};
+
+int main()
+{
+    char fileName[20];
+    printf("Ime ulazne datoteke: \n");
+    scanf("%s",fileName);
+    FILE *reads;
+    reads=fopen(fileName, "r");
+    struct Student niz[30];
+
+     int i=0;
+     while(!feof(reads)) {
+            struct Student nn;
+           // struct Student *n= (struct Student*)malloc(sizeof(struct Student));
+            //fscanf(reads,"%s %s %d", n->ime, n->prezime, n->ocena);
+            fread(&nn, sizeof(struct Student), 1, reads);
+            niz[i]=nn;
+            i=i+1;
+     }
+
+     for(int j=0;j<i;j++){
+        printf("%s",niz[i].ocena);
+     }
+
+    return 0;
+}

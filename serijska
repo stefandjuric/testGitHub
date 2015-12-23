@@ -1,0 +1,165 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct zatvorenik
+{
+    int ebr;
+    char sifra[7];
+    char datum[16];
+    char celija[5];
+    int kazna;
+    int status;
+}zatvorenik;
+
+char *open();
+zatvorenik *trazenje(int, char *, long *);
+void dodavanje(char *);
+void ispis(char *);
+void brisanje(int, char *);
+void kreiranje();
+
+
+using namespace std;
+
+int main()
+{
+    char *fname;
+    int izbor;
+    long pozicija;
+    printf("1 - kreiranje\n");
+    printf("2 - otvaranje\n");
+    printf("3 - dodavanje\n");
+    printf("4 - trazenje\n");
+    printf("5 - brisanje\n");
+    printf("6 - ispis\n");
+    scanf("%d", &izbor);
+    switch(izbor)
+    {
+        case 1:
+            kreiranje(); break;
+        case 2:
+            open(); break;
+        case 3:
+            dodavanje(fname); break;
+        case 4:
+            trazenje(1, fname, &pozicija); break;
+        case 5:
+            brisanje(1, fname); break;
+        case 6:
+            ispis(fname);
+    }
+
+    fname = open();
+    dodavanje(fname);
+    ispis(fname);
+    //brisanje(1, fname);
+    ispis(fname);
+
+    return 0;
+}
+
+char *open()
+{
+    char filename[20];
+    FILE *f = NULL;
+    do
+    {
+        scanf("%s", filename);
+        f = fopen(filename, "rb");
+    }while(f == NULL);
+    return filename;
+}
+
+zatvorenik *trazenje(int arg, char *fname, long *pozicija)
+{
+    *pozicija = -1;
+    FILE *f = fopen(fname, "rb");
+    zatvorenik *z = (zatvorenik *)malloc(sizeof(zatvorenik));
+    printf("asdf");
+    fread(z, sizeof(zatvorenik), 1, f);
+    printf("\n%d\n", z->ebr);
+    while(fread(z, sizeof(zatvorenik), 1, f) != 0)
+    {
+        *pozicija++;
+        if(arg == z->ebr)
+        printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa %d", z->ebr);
+            return z;
+    }
+
+    fclose(f);
+    return NULL;
+}
+
+void dodavanje(char *fname)
+{
+    FILE *f = fopen(fname, "r+b");
+    zatvorenik *z = (zatvorenik *)malloc(sizeof(zatvorenik));
+    long pozicija;
+    printf("ebr: ");
+    scanf("%d", &(z->ebr));
+    zatvorenik *zat = (zatvorenik *)malloc(sizeof(zatvorenik));
+    zat = trazenje(z->ebr, fname, &pozicija);
+    if(zat != NULL)
+    {
+        if(zat->status != 0)
+        {
+            printf("Neuspesno dodavanje, postoji slog");
+            return;
+        }
+        fseek(f, pozicija * sizeof(zatvorenik), SEEK_SET);
+    }
+    else
+    {
+        fseek(f, 0, SEEK_END);
+    }
+    printf("sifra: ");
+    scanf("%s", &(z->sifra));
+    fflush(stdin);
+    printf("datum: ");
+    scanf("%s", &(z->datum));
+    fflush(stdin);
+    printf("celija: ");
+    scanf("%s", &(z->celija));
+    fflush(stdin);
+    printf("kazna: ");
+    scanf("%d", &(z->kazna));
+    z->status = 1;
+    fwrite(z, sizeof(zatvorenik), 6, f);
+    fclose(f);
+}
+
+void ispis(char *fname)
+{
+    FILE *f = fopen(fname, "rb");
+    zatvorenik *z = (zatvorenik *)malloc(sizeof(zatvorenik));
+    while(fread(z,sizeof(zatvorenik), 1, f) != 0)
+    {
+        if(z->status == 1)
+            printf("%d\n%s\n%s\n%s\n%d", z->ebr, z->sifra, z->datum, z->celija, z->kazna);
+    }
+    fclose(f);
+}
+
+void brisanje(int arg, char *fname)
+{
+    FILE *f = fopen(fname, "r+b");
+    long p;
+    zatvorenik *z = trazenje(arg, fname, &p);
+    if(z == NULL)
+    {
+        printf("Neuspesno brisanje, ne postoji slog");
+        return;
+    }
+    z->status = 0;
+    fseek(f, 0, SEEK_SET);
+    fwrite(z, sizeof(zatvorenik), 1, f);
+    fclose(f);
+}
+
+void kreiranje()
+{
+    char fname[15];
+    scanf("%s", fname);
+    FILE *f = fopen(fname, "wb");
+    fclose(f);
+}

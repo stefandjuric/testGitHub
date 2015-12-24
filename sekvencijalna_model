@@ -1,0 +1,34 @@
+#ifndef MODEL_HPP_INCLUDED
+#define MODEL_HPP_INCLUDED
+
+/*************************************
+U ovom fajlu neohodno je specificirati strukture: sloga (TSlog) i cvora liste (TCvor).
+Takodje, neophodno je implementirati sve pomocne (utility) funkcije koje rade nad ovim
+strukturama (u ovom slucaju samo ispis posmatranog sloga)
+*************************************/
+//slog
+typedef struct slog {
+    int evbr;
+    char sifra[8];
+    char datum[16];
+    char celija[6];
+    int kazna;
+    int status=3;
+} TSlog;
+
+typedef struct blok{
+    TSlog val[3];
+}TBlok;
+
+
+//pomocna funkcija za ispis elementa strukture
+void ispis (TSlog el) {
+    printf("Evidencioni broj%d", el.evbr);
+    printf("%Evidencioni broj%s", el.sifra);
+    printf("Evidencioni broj%s", el.datum);
+    printf("Evidencioni broj%s", el.celija);
+    printf("Evidencioni broj%d", el.kazna);
+    printf("Evidencioni broj%d", el.status);
+}
+
+#endif // MODEL_HPP_INCLUDED

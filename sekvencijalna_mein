@@ -1,0 +1,175 @@
+#include "lista.hpp"
+
+/*********************************************
+Funkcije za rad sa datotekama
+**********************************************/
+
+void formiranje()
+{
+    char fname[15];
+    scanf("%s", fname);
+    FILE *f = fopen(fname, "w+");
+    TBlok *z = (TBlok*)malloc(sizeof(TBlok));
+    fwrite(z, sizeof(TBlok), 1, f);
+    fclose(f);
+    free(z);
+}
+
+void unos(char* fname)
+{
+    FILE *f = fopen(fname, "r+");
+    TSlog *s=(TSlog*)malloc(sizeof(TSlog));
+    printf("Evidencioni broj:\n");
+    fflush(stdin);
+    scanf("%d",&s->evbr);
+    printf("Sifra zatvorenika:\n");
+    fflush(stdin);
+    scanf("%s",s->sifra);
+    printf("Datum i vreme dolaska:\n");
+    fflush(stdin);
+    scanf("%s",s->datum);
+    printf("Oznaka celije:\n");
+    fflush(stdin);
+    scanf("%s",s->celija);
+    printf("Duzina kazne:\n");
+    fflush(stdin);
+    scanf("%d",&(s->kazna));
+    s->status=1;
+
+    TBlok *z = (TBlok*)malloc(sizeof(TBlok));
+    printf("Evidencioni broj")
+    int flag=0;
+    TSlog *temp=(TSlog*)malloc(sizeof(TSlog));
+    while(fread(z,sizeof(TBlok), 1, f) != 0)
+    {
+        int i;
+        position=0;
+        for (i=1;i<=3;i++)
+        {
+            if(flag==0){
+                if(z.val[i].evbr>s.evbr)
+                    flag=1;
+                    position=i;
+                if(flag==1){
+                    temp=z.val[i];
+                    z.val[i]=temp;
+                }
+            }
+            else{
+                if(flag==1){
+                    temp=z.val[i];
+                    z.val[i]=temp;
+                }
+            }
+        }
+        if(flag!=0){
+            z.val[position]=s;
+        }
+        fwrite(z, sizeof(TBlok), 1, f);
+    }
+
+
+    fclose(f);
+
+}
+
+
+
+
+
+/*********************************************
+Meni datoteke
+*********************************************/
+//unos broja koji predstavlja opciju iz menija
+ int brojUnos() {
+     char *s = new char[30];
+     char *errstr;
+     long val;
+
+     while (1) {
+       scanf( " %s", s);
+       val = strtol(s, &errstr, 10);
+	   if (!*errstr)
+		   return val;
+        else
+            printf("tip vrednosti nije odgovarajuc. Unesite ponovo -> ");
+     }
+ }
+
+//Meni za komunikaciju sa korisnicima
+int meni() {
+    int x;
+    printf("\n1. Formiranje datoteke");
+    printf("\n2. Upis novog sloga");
+    printf("\n3. Kraj rada");
+    printf("\n\nVas izbor je -> ");
+
+    do {
+        x = (int)brojUnos();
+    } while(x < 1 && x > 3); //!!!ovo izmeniti ukoliko postoji veci broj opcija u meniju
+
+    return x;
+}
+
+/*********************************************
+main() funkcija
+*********************************************/
+//Glavna funkcija od koje kreæe izvrsavanje programa
+int main()
+ {
+
+    //glava liste
+    //TCvor *glava = NULL;
+    //novi slog koji se unosi
+    //TSlog el;
+
+    /** primer poziva funkcija liste iz menija i sa unosom vrednosti **/
+    //odabrana opcija iz menija
+
+    int odg;
+    do {
+        odg=meni();
+        switch(odg) {
+        case 1:
+            formiranje();
+            break;
+        case 2:
+            printf("Datoteka u koju upisujemo slog:\n");
+            char fileName[20];
+            scanf("%s",fileName);
+            unos(fileName);
+            break;
+        }
+    } while(odg != 3);
+
+
+    /** primer statickog poziva funkcija liste **/
+    /*
+    el.info = 1;
+    unosElementa(&glava, el, 1);
+    el.info = 3;
+    unosElementa(&glava, el, 1);
+    el.info = 5;
+    unosElementa(&glava, el, 1);
+    ispisiListu(glava);
+    TCvor citanje;
+    //uspesno citanje elementa na poziciji 1
+    printf("\n");
+    if(procitajElement(glava, &citanje, 2) != 0) {
+        ispis(citanje.val);
+    }
+    //neuspesno citanje elementa na poziciji 8
+    printf("\n");
+    if(procitajElement(glava, &citanje, 8) == 0) {
+        printf("Neuspesno citanje!!!");
+    }
+    printf("\n");
+    brisiElement(&glava, 2);
+    ispisiListu(glava);
+    printf("\n");
+    obrisiListu(&glava);
+    ispisiListu(glava);
+    */
+    return 0;
+ }
+

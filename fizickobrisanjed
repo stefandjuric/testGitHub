@@ -2,3 +2,4 @@ ftage
 ftarget
 memcpy
 strcpy
+ftracate(fileno(file*),length
